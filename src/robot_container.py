@@ -12,6 +12,9 @@ from commands2 import Command, CommandScheduler, cmd
 from src.robot_constants import RobotConstants
 from src.controlboard.controlboard import Controlboard
 
+from src.subsystems.superstructure.superstructure import Superstructure
+from src.subsystems.intake_rollers.intake_rollers import IntakeRollers
+
 
 class RobotContainer(TimedRobot):
     disabled_counter: int
@@ -44,6 +47,12 @@ class RobotContainer(TimedRobot):
 
     def robotInit(self) -> None:
         Controlboard.configure_bindings()
+
+        for sendable in (
+            Superstructure.m_instance,
+            IntakeRollers.m_instance,
+        ):
+            SmartDashboard.putData(sendable)
 
         self.update_alliance()
 

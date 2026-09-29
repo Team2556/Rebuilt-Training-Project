@@ -15,10 +15,14 @@ from src.subsystems.drive.drive import Drive
 from src.subsystems.drive.drive_constants import DriveConstants
 from src.subsystems.superstructure.superstructure_constants import SuperstructureConstants
 
+from src.subsystems.intake_rollers.intake_rollers import IntakeRollers
+
 
 class State(Enum):
     # TODO: add more states (example: intaking, firing, all that stuff)
     IDLE = auto()
+    INTAKING = auto()
+    EXTAKING = auto()
 
 class Superstructure(Subsystem):
     """
@@ -84,5 +88,25 @@ class Superstructure(Subsystem):
         )
     
     # TODO: create commands here
+    
+    def intake_command(self) -> Command:
+        return cmd.parallel(
+            cmd.runEnd(
+                IntakeRollers.m_instance.intake, 
+                IntakeRollers.m_instance.stop_roller, 
+                IntakeRollers.m_instance
+            ),
+            self.state_command(State.INTAKING)
+        )
+
+    def extake_command(self) -> Command:
+        return cmd.parallel(
+            cmd.runEnd(
+                IntakeRollers.m_instance.extake, 
+                IntakeRollers.m_instance.stop_roller, 
+                IntakeRollers.m_instance
+            ),
+            self.state_command(State.EXTAKING)
+        )
 
 Superstructure.m_instance = Superstructure()

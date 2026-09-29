@@ -35,6 +35,14 @@ class Controlboard:
         )
 
         # TODO: create more driver control commands
+        
+        driver.leftBumper().whileTrue(
+            Superstructure.m_instance.intake_command()
+        )
+        
+        driver.rightBumper().whileTrue(
+            Superstructure.m_instance.extake_command()
+        )
 
     @staticmethod
     def operator_controls() -> None:
